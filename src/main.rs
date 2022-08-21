@@ -111,17 +111,35 @@ fn main() -> ! {
     // Our button input
     // let button_pin = pins.gpio15.into_pull_up_input();
 
+    // reset the pins to clear the output before running
+    for pin in pins_out.iter_mut() {
+        pin.set_low().unwrap();
+    }
+
     // Run forever, setting the LED according to the button
+    let pin_count = pins_out.len();
     loop {
-        for pin in pins_out.iter_mut() {
+        for pin in pins_out[0..pin_count - 1].iter_mut() {
             pin.set_high().unwrap();
             delay.delay_ms(1000);
+            pin.set_low().unwrap();
         }
 
-        for pin in pins_out.iter_mut().rev() {
-            pin.set_low().unwrap();
+        for pin in pins_out[1..pin_count].iter_mut().rev() {
+            pin.set_high().unwrap();
             delay.delay_ms(1000);
+            pin.set_low().unwrap();
         }
+
+        // for pin in pins_out.iter_mut() {
+        //     pin.set_high().unwrap();
+        //     delay.delay_ms(1000);
+        // }
+
+        // for pin in pins_out.iter_mut().rev() {
+        //     pin.set_low().unwrap();
+        //     delay.delay_ms(1000);
+        // }
         // led_pin.set_high().unwrap();
         // delay.delay_ms(500);
         // led_pin.set_low().unwrap();
